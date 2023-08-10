@@ -1,5 +1,22 @@
 <template>
   <q-page class="bg-grey-3 column">
+    <div class="row q-pa-sm bg-primary">
+      <q-input
+        @keyup.enter="addTask"
+        filled
+        class="col q-mt-md"
+        square
+        bg-color="white"
+        bottom-slots
+        v-model="newTask"
+        placeholder="Добавьте задачу"
+        dense
+      >
+        <template v-slot:append>
+          <q-btn @click="addTask" round dense flat icon="add" />
+        </template>
+      </q-input>
+    </div>
     <q-list separator bordered>
       <transition-group
         tag="div"
@@ -47,6 +64,7 @@
 export default {
   data() {
     return {
+      newTask: "",
       tasks: [
         {
           title: "hello1",
@@ -65,7 +83,24 @@ export default {
   },
   methods: {
     deleteTask(index) {
-      this.tasks.splice(index, 1);
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Вы точно хотите удалить дело?",
+          cancel: true,
+          persistent: true,
+        })
+        .onOk(() => {
+          this.tasks.splice(index, 1);
+          this.$q.notify("Задача удалена!");
+        });
+    },
+    addTask() {
+      this.tasks.push({
+        title: this.newTask,
+        done: false,
+      });
+      this.newTask = "";
     },
   },
 };
