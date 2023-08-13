@@ -35,7 +35,7 @@
         "
       >
         <q-list padding>
-          <q-item to="/" clickable v-ripple>
+          <q-item to="/" exact clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="list" />
             </q-item-section>
@@ -43,7 +43,15 @@
             <q-item-section> Todo </q-item-section>
           </q-item>
 
-          <q-item to="/help" clickable v-ripple>
+          <q-item to="/todo2" exact clickable v-ripple>
+            <q-item-section avatar>
+              <q-icon name="list" />
+            </q-item-section>
+
+            <q-item-section> Todo2 </q-item-section>
+          </q-item>
+
+          <q-item to="/help" exact clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="help" />
             </q-item-section>
@@ -51,7 +59,7 @@
             <q-item-section> Поддержка </q-item-section>
           </q-item>
 
-          <q-item to="/about" clickable v-ripple>
+          <q-item to="/about" exact clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="link" />
             </q-item-section>
@@ -59,7 +67,7 @@
             <q-item-section> О нас </q-item-section>
           </q-item>
 
-          <q-item to="/contacts" clickable v-ripple>
+          <q-item to="/contacts" exact clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="contact_phone" />
             </q-item-section>
