@@ -29,8 +29,8 @@
     >
       <q-scroll-area
         style="
-          height: calc(100% - 185px);
-          margin-top: 185px;
+          height: calc(100% - 277px);
+          margin-top: 277px;
           border-right: 1px solid #ddd;
         "
       >
@@ -77,27 +77,30 @@
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top image" style="height: 185px">
-        <div class="absolute-bottom bg-transparent">
-          <q-avatar size="56px" class="q-mb-sm">
+      <q-img class="absolute-top image" style="height: 277px">
+        <div class="absolute-top bg-transparent">
+          <q-avatar size="56px" class="q-mb-sm q-mt-sm">
             <img src="../assets/vaz-dev.jpg" />
           </q-avatar>
           <div class="text-weight-bold">Alex Vazovsky</div>
           <div>@vazovsky</div>
         </div>
+        <div class="absolute-bottom bg-transparent">
+          <q-select
+            filled
+            v-model="single"
+            :options="options"
+            label="Тип занятий"
+            style="width: 100%; color: #fff"
+          />
+        </div>
       </q-img>
     </q-drawer>
 
-    <!-- <q-page-container>
-      <keep-alive>
-        <router-view />
-      </keep-alive>
-    </q-page-container> -->
-    
     <q-page-container>
       <router-view v-slot="{ Component }">
         <keep-alive>
-          <component :is="Component" />
+          <component :is="Component" :selectCase="single" />
         </keep-alive>
       </router-view>
     </q-page-container>
@@ -105,7 +108,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 import { date } from "quasar";
 
@@ -163,6 +166,12 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false);
+    const single = ref(null);
+    const options = ["Дом", "Работа", "Отдых", "Другое", "Все дела"];
+
+    watch(single, (selectCase) => {
+      console.log("Выбранный тип:", selectCase);
+    });
 
     return {
       essentialLinks: linksList,
@@ -170,6 +179,8 @@ export default defineComponent({
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
+      single,
+      options,
     };
   },
   computed: {
@@ -190,5 +201,11 @@ export default defineComponent({
 }
 .image {
   background-color: $primary;
+}
+.q-field--auto-height.q-field--labeled .q-field__native {
+  color: #fff;
+}
+.q-field__label, .q-field__marginal {
+  // color: rgba(255, 255, 255, 0.8);
 }
 </style>

@@ -30,7 +30,7 @@
           :class="{
             'done bg-green-2 animate__animated animate__bounce': task.done,
           }"
-          v-for="task in tasks"
+          v-for="task in getFilteredTasks()"
           :key="task.id"
           v-ripple
         >
@@ -89,21 +89,15 @@ export default {
   data() {
     return {
       newTask: "",
-      tasks: [
-        // {
-        //   title: "hello1",
-        //   done: true,
-        // },
-        // {
-        //   title: "hello2",
-        //   done: false,
-        // },
-        // {
-        //   title: "hello3",
-        //   done: false,
-        // },
-      ],
+      tasks: [],
     };
+  },
+  props: {
+    selectCase: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   methods: {
     deleteTask(id) {
@@ -120,12 +114,23 @@ export default {
         });
     },
     addTask() {
-      addDoc(todosCollectionRef, {
-        content: this.newTask,
-        done: false,
-        date: Date.now(),
-      });
-      this.newTask = "";
+      if (!this.selectCase) {
+        this.$q.notify(
+          "Пожалуйста, выберите тип занятий перед добавлением задачи."
+        );
+      } else if (this.selectCase === "Все дела") {
+        this.$q.notify("В этой категории нельзя добавить задачу");
+      } else if (!this.newTask) {
+        this.$q.notify("Введите сообщение");
+      } else {
+        addDoc(todosCollectionRef, {
+            case: this.selectCase,
+            content: this.newTask,
+            done: false,
+            date: Date.now(),
+          });
+          this.newTask = "";
+        }
     },
     toggleDone(id) {
       const index = this.tasks.findIndex((task) => task.id === id);
@@ -133,6 +138,13 @@ export default {
       updateDoc(doc(todosCollectionRef, id), {
         done: !this.tasks[index].done,
       });
+    },
+    getFilteredTasks() {
+      if (this.selectCase === "Все дела") {
+        return this.tasks;
+      } else {
+        return this.tasks.filter((task) => task.case === this.selectCase);
+      }
     },
   },
   mounted() {
@@ -143,6 +155,7 @@ export default {
       querySnapshot.forEach((doc) => {
         const todo = {
           id: doc.id,
+          case: doc.data().case,
           title: doc.data().content,
           done: doc.data().done,
         };
